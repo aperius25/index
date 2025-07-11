@@ -1,0 +1,377 @@
+<!-- HEAD -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- BODY -->
+<main style="padding: 10px;">
+  <hr>
+  <h3 style="text-align:center;">👛 Dompet Digital Aperius</h3>
+
+
+  <div style="background:#e0f7fa; padding:20px; border-radius:10px; max-width:500px; margin:auto; box-shadow:0 0 10px rgba(0,0,0,0.1);">
+
+    <!-- SALDO -->
+    <section style="display:flex; justify-content:space-between; flex-wrap:wrap; align-items:center;">
+      <div>
+        <h4 style="margin:0;">Saldo Anda:</h4>
+        <h1 id="walletBalance" style="color:#00796b; margin:5px 0; font-size:2.2em;">Rp 0</h1>
+      </div>
+      <div style="margin-top:10px;">
+        <button onclick="topUpWallet()" class="btn blue">Top Up</button>
+        <button onclick="withdrawWallet()" class="btn red">Tarik Tunai</button>
+      </div>
+    </section>
+
+    <!-- PROMO -->
+    <section id="promoBox" style="margin-top:15px; background:#fff3cd; padding:10px; border-left:4px solid #ffc107; border-radius:5px;">
+      🎁 <strong>Promo Hari Ini:</strong> Menangkan Rp. 1.000.000 setiap hari!
+      <button onclick="activatePromo()" id="promoBtn" class="btn orange small" style="float:right;">Aktifkan</button>
+      <div style="clear:both;"></div>
+    </section>
+
+    <!-- IKON FITUR -->
+    <section style="display:grid; grid-template-columns:repeat(auto-fit,minmax(80px,1fr)); gap:10px; margin-top:20px; text-align:center;">
+      <div onclick="showFeature('Save Card')" style="cursor:pointer;"><img src="https://img.icons8.com/ios-filled/50/wallet--v1.png" style="width:30px"><br><small>Save Card</small></div>
+      <div onclick="showFeature('Rewards')" style="cursor:pointer;"><img src="https://img.icons8.com/ios-filled/50/gift--v1.png" style="width:30px"><br><small>Rewards</small></div>
+      <div onclick="showFeature('Voucher')" style="cursor:pointer;"><img src="https://img.icons8.com/ios-filled/50/ticket.png" style="width:30px"><br><small>Voucher</small></div>
+      <div onclick="showFeature('QR Pay')" style="cursor:pointer;"><img src="https://img.icons8.com/ios-filled/50/qr-code.png" style="width:30px"><br><small>QR Pay</small></div>
+      <div onclick="showFeature('Riwayat')" style="cursor:pointer;"><img src="https://img.icons8.com/ios-filled/50/history.png" style="width:30px"><br><small>Riwayat</small></div>
+    </section>
+
+    <!-- MODAL TAMBAHAN (jika ada fitur dikembangkan) -->
+    <section id="modalFiturLain" style="display:none; margin-top:20px;"></section>
+
+    <!-- QR PAY -->
+    <section id="qrPayModal" style="display:none; margin-top:20px; background:#e8f5e9; padding:10px; border-radius:5px;">
+      <h4>📲 QR Pay</h4>
+      <p><em>Format: QR-nama|jumlah</em></p>
+      <input type="text" id="qrInput" placeholder="QR-apri|5000" style="width:100%; padding:8px; margin-bottom:10px; border-radius:5px; border:1px solid #ccc;">
+      <button onclick="submitQR()" class="btn blue small">Bayar Sekarang</button>
+    </section>
+
+    <!-- SAVE CARD MODAL -->
+    <div id="saveCardBox" style="display:none; margin-top:20px; padding:10px; background:#fffbe7; border-radius:5px;">
+  <h4>💳 Kartu Tersimpan</h4>
+  <input id="cardName" placeholder="Nama Kartu" style="width:100%; padding:8px; margin-bottom:5px; border:1px solid #ccc; border-radius:5px;">
+  <input id="cardNumber" placeholder="Nomor Kartu" style="width:100%; padding:8px; margin-bottom:10px; border:1px solid #ccc; border-radius:5px;">
+  <button onclick="simpanKartu()" class="btn blue small">Simpan Kartu</button>
+  <ul id="cardList" style="margin-top:10px; padding-left:20px;"></ul>
+</div>
+
+<!-- REWARDS BOX -->
+<div id="rewardsBox" style="display:none; margin-top:20px; padding:10px; background:#e1f5fe; border-radius:5px;">
+  <h4>🎁 Poin Rewards</h4>
+  <p>Kamu punya <strong id="rewardsPoint">0</strong> poin.</p>
+  <button onclick="tambahPoin(10)" class="btn orange small">Tambah 10 Poin</button>
+</div>
+
+
+    <!-- VOUCHER -->
+    <section id="voucherBox" style="display:none; margin-top:20px; background:#f3e5f5; padding:10px; border-radius:5px;">
+      <h4>🎫 Voucher Diskon</h4>
+      <div style="margin-bottom:10px;">
+        <button class="btn gray small" onclick="batalkanVoucher()">❌ Batalkan</button>
+        <button class="btn blue small" onclick="tampilkanVoucher()">📢 Lihat Aktif</button>
+        <button class="btn red small" onclick="resetVoucher()">🔁 Reset</button>
+      </div>
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr>
+            <th>No</th><th>Diskon</th><th>Syarat</th><th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>12%</td><td>Pesanan > Rp200.000</td><td><button class="btn orange small" onclick="klaimVoucher(12, 200000)">Klaim</button></td></tr>
+          <tr><td>2</td><td>6%</td><td>Pesanan > Rp100.000</td><td><button class="btn orange small" onclick="klaimVoucher(6, 100000)">Klaim</button></td></tr>
+          <tr><td>3</td><td>3%</td><td>Pesanan > Rp50.000</td><td><button class="btn orange small" onclick="klaimVoucher(3, 50000)">Klaim</button></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- RIWAYAT -->
+    <section style="margin-top:20px;">
+      <h4>📑 Riwayat Transaksi</h4>
+      <ul id="walletLog" style="list-style:none; padding-left:0; max-height:200px; overflow-y:auto;"></ul>
+      <button onclick="clearLog()" class="btn gray small">Hapus Riwayat</button>
+    </section>
+
+    <!-- TRANSFER -->
+    <section style="margin-top:20px;">
+      <h4>💸 Transfer Saldo</h4>
+      <input id="transferTo" placeholder="Nama Tujuan" style="width:100%; padding:8px; margin-bottom:5px; border-radius:5px; border:1px solid #ccc;">
+      <input id="transferAmount" placeholder="Jumlah Transfer" type="number" style="width:100%; padding:8px; margin-bottom:5px; border-radius:5px; border:1px solid #ccc;">
+      <button onclick="transferSaldo()" class="btn blue small">Kirim Sekarang</button>
+    </section>
+  </div>
+</main>
+
+
+<!-- CSS Buttons -->
+<style>
+  .btn {
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    margin: 3px;
+    transition: background 0.2s;
+  }
+  .btn.small { padding: 5px 10px; font-size: 12px; }
+  .btn.blue { background: #2196f3; }
+  .btn.red { background: #f44336; }
+  .btn.orange { background: #ff9800; }
+  .btn.gray { background: #9e9e9e; }
+  .btn:hover { opacity: 0.85; }
+</style>
+
+<script>
+  let walletSaldo = parseInt(localStorage.getItem("walletSaldo")) || 0;
+  let walletLog = JSON.parse(localStorage.getItem("walletLog")) || [];
+  let promoActive = localStorage.getItem("promoActive") === "true";
+
+  function formatRupiah(angka) {
+    return angka.toLocaleString("id-ID", { style: "currency", currency: "IDR" });
+  }
+
+  function updateWalletDisplay() {
+    document.getElementById("walletBalance").innerText = formatRupiah(walletSaldo);
+  }
+
+  function updateWalletLog() {
+    const logList = document.getElementById("walletLog");
+    if (walletLog.length === 0) {
+      logList.innerHTML = "<li><em>Belum ada transaksi.</em></li>";
+      return;
+    }
+    const slicedLog = walletLog.slice(0, 20);
+    logList.innerHTML = slicedLog.map(item => `<li>📝 ${item}</li>`).join('');
+  }
+
+  function topUpWallet() {
+    let input = prompt("Masukkan jumlah top-up (Rp):", "0");
+    let amount = parseInt(input);
+    if (!isNaN(amount) && amount > 0) {
+      walletSaldo += amount;
+      walletLog.unshift(`Top Up: +${formatRupiah(amount)} (${new Date().toLocaleString()})`);
+      saveWalletData(); updateWalletDisplay(); updateWalletLog();
+      alert("✅ Saldo berhasil ditambahkan!");
+    } else alert("❌ Input tidak valid.");
+  }
+
+  function withdrawWallet() {
+    let input = prompt("Masukkan jumlah penarikan (Rp):", "10000");
+    let amount = parseInt(input);
+    if (!isNaN(amount) && amount > 0 && amount <= walletSaldo) {
+      walletSaldo -= amount;
+      walletLog.unshift(`Tarik Tunai: -${formatRupiah(amount)} (${new Date().toLocaleString()})`);
+      saveWalletData(); updateWalletDisplay(); updateWalletLog();
+      alert("💸 Penarikan berhasil.");
+    } else alert("❌ Jumlah tidak valid atau saldo tidak cukup.");
+  }
+
+  function activatePromo() {
+    if (promoActive) {
+      promoActive = false;
+      localStorage.setItem("promoActive", false);
+      document.getElementById("promoBtn").innerText = "Aktifkan";
+      document.getElementById("promoBtn").classList.remove("gray");
+      document.getElementById("promoBtn").classList.add("orange");
+      alert("🎁 Promo dinonaktifkan.");
+    } else {
+      promoActive = true;
+      localStorage.setItem("promoActive", true);
+      document.getElementById("promoBtn").innerText = "Matikan";
+      document.getElementById("promoBtn").classList.remove("orange");
+      document.getElementById("promoBtn").classList.add("gray");
+      alert("🎉 Promo berhasil diaktifkan!");
+    }
+  }
+
+  function clearLog() {
+    if (confirm("Yakin ingin menghapus riwayat transaksi?")) {
+      walletLog = [];
+      saveWalletData(); updateWalletLog();
+    }
+  }
+
+  function transferSaldo() {
+    const tujuan = document.getElementById("transferTo").value.trim();
+    const jumlah = parseInt(document.getElementById("transferAmount").value);
+    if (!tujuan || isNaN(jumlah) || jumlah <= 0) {
+      alert("❌ Nama tujuan dan jumlah harus diisi dengan benar.");
+      return;
+    }
+    if (jumlah > walletSaldo) {
+      alert("❌ Saldo tidak mencukupi.");
+      return;
+    }
+    walletSaldo -= jumlah;
+    walletLog.unshift(`Transfer ke ${tujuan}: -${formatRupiah(jumlah)} (${new Date().toLocaleString()})`);
+    saveWalletData(); updateWalletDisplay(); updateWalletLog();
+    alert(`✅ Berhasil transfer ke ${tujuan} sebesar ${formatRupiah(jumlah)}!`);
+    document.getElementById("transferTo").value = "";
+    document.getElementById("transferAmount").value = "";
+  }
+
+  function showFeature(namaFitur) {
+    document.getElementById("qrPayModal").style.display = "none";
+    document.getElementById("voucherBox").style.display = "none";
+
+    if (namaFitur === 'QR Pay') {
+      document.getElementById("qrPayModal").style.display = "block";
+    } else if (namaFitur === 'Voucher') {
+      document.getElementById("voucherBox").style.display = "block";
+    } else {
+      alert(`🔧 Fitur '${namaFitur}' belum aktif sepenuhnya.`);
+    }
+  }
+function submitQR() {
+  const qrCode = document.getElementById("qrInput").value.trim();
+  if (!qrCode.startsWith("QR-")) {
+    alert("❌ Kode QR tidak valid. Harus diawali 'QR-'");
+    return;
+  }
+
+  const parts = qrCode.substring(3).split("|");
+  if (parts.length !== 2 || isNaN(parseInt(parts[1]))) {
+    alert("❌ Format QR salah. Gunakan QR-username|jumlah");
+    return;
+  }
+
+  const username = parts[0];
+  const jumlah = parseInt(parts[1]);
+
+  if (jumlah > walletSaldo) {
+    alert("❌ Saldo tidak cukup untuk transaksi ini.");
+    return;
+  }
+
+  // ✅ Cek diskon jika voucher aktif dan memenuhi syarat
+  let diskon = 0;
+  if (voucherDiskon.persentase > 0 && jumlah >= voucherDiskon.minimal) {
+    diskon = Math.floor(jumlah * voucherDiskon.persentase / 100);
+    walletLog.unshift(`🎟️ Diskon ${voucherDiskon.persentase}%: -${formatRupiah(diskon)} (${new Date().toLocaleString()})`);
+  }
+
+  const totalDipotong = jumlah - diskon;
+
+  if (totalDipotong > walletSaldo) {
+    alert("❌ Saldo tidak mencukupi setelah diskon diterapkan.");
+    return;
+  }
+
+  walletSaldo -= totalDipotong;
+  walletLog.unshift(`QR Pay ke ${username}: -${formatRupiah(totalDipotong)} (${new Date().toLocaleString()})`);
+  saveWalletData(); updateWalletDisplay(); updateWalletLog();
+
+  alert(`✅ Pembayaran ke ${username} sebesar ${formatRupiah(jumlah)} berhasil.\n💸 Potongan diskon: ${formatRupiah(diskon)}\nTotal dipotong: ${formatRupiah(totalDipotong)}`);
+  document.getElementById("qrInput").value = "";
+}
+
+
+  function saveWalletData() {
+    localStorage.setItem("walletSaldo", walletSaldo);
+    localStorage.setItem("walletLog", JSON.stringify(walletLog));
+  }
+
+  updateWalletDisplay();
+  updateWalletLog();
+  if (promoActive) {
+    document.getElementById("promoBtn").innerText = "Matikan";
+    document.getElementById("promoBtn").classList.remove("orange");
+    document.getElementById("promoBtn").classList.add("gray");
+  } else {
+    document.getElementById("promoBtn").innerText = "Aktifkan";
+    document.getElementById("promoBtn").classList.remove("gray");
+    document.getElementById("promoBtn").classList.add("orange");
+  }
+  let voucherDiskon = { persentase: 0, minimal: 0 };
+
+function klaimVoucher (persen, minimal) {
+  voucherDiskon = { persentase: persen, minimal: minimal };
+  alert(`🎉 Voucher diskon ${persen}% berhasil diklaim!\nBerlaku untuk transaksi di atas ${formatRupiah(minimal)}.`);
+}
+function batalkanVoucher() {
+  if (voucherDiskon.persentase === 0) {
+    alert("⚠️ Tidak ada voucher yang sedang aktif.");
+    return;
+  }
+  voucherDiskon = { persentase: 0, minimal: 0 };
+  alert("❌ Voucher berhasil dibatalkan.");
+}
+
+function tampilkanVoucher() {
+  if (voucherDiskon.persentase === 0) {
+    alert("📢 Tidak ada voucher yang sedang aktif saat ini.");
+  } else {
+    alert(`📢 Voucher Aktif: ${voucherDiskon.persentase}% untuk transaksi di atas ${formatRupiah(voucherDiskon.minimal)}.`);
+  }
+}
+
+function resetVoucher() {
+  if (confirm("Yakin ingin mereset semua voucher yang diklaim?")) {
+    voucherDiskon = { persentase: 0, minimal: 0 };
+    alert("🔁 Semua voucher telah direset.");
+  }
+}
+function showFeature(namaFitur) {
+  // Sembunyikan semua dulu
+  document.getElementById("qrPayModal").style.display = "none";
+  document.getElementById("voucherBox").style.display = "none";
+  document.getElementById("saveCardBox").style.display = "none";
+  document.getElementById("rewardsBox").style.display = "none";
+
+  if (namaFitur === 'QR Pay') {
+    document.getElementById("qrPayModal").style.display = "block";
+  } else if (namaFitur === 'Voucher') {
+    document.getElementById("voucherBox").style.display = "block";
+  } else if (namaFitur === 'Save Card') {
+    document.getElementById("saveCardBox").style.display = "block";
+    tampilkanKartu();
+  } else if (namaFitur === 'Rewards') {
+    document.getElementById("rewardsBox").style.display = "block";
+    updatePoin();
+  } else {
+    alert(`🔧 Fitur '${namaFitur}' belum tersedia.`);
+  }
+}
+let kartuTersimpan = JSON.parse(localStorage.getItem("kartuTersimpan_" + currentUser)) || [];
+let rewards = parseInt(localStorage.getItem("rewards_" + currentUser)) || 0;
+
+function simpanKartu() {
+  const nama = document.getElementById("cardName").value.trim();
+  const nomor = document.getElementById("cardNumber").value.trim();
+  if (!nama || !nomor) return alert("❌ Isi nama & nomor kartu!");
+
+  kartuTersimpan.push({ nama, nomor });
+  localStorage.setItem("kartuTersimpan_" + currentUser, JSON.stringify(kartuTersimpan));
+  tampilkanKartu();
+  alert("✅ Kartu berhasil disimpan!");
+  document.getElementById("cardName").value = "";
+  document.getElementById("cardNumber").value = "";
+}
+
+function tampilkanKartu() {
+  const list = document.getElementById("cardList");
+  if (kartuTersimpan.length === 0) {
+    list.innerHTML = "<li><em>Belum ada kartu tersimpan</em></li>";
+  } else {
+    list.innerHTML = kartuTersimpan.map((k, i) => `<li>💳 ${k.nama} - ${k.nomor}</li>`).join("");
+  }
+}
+
+function tambahPoin(jumlah) {
+  rewards += jumlah;
+  localStorage.setItem("rewards_" + currentUser, rewards);
+  updatePoin();
+  alert(`🎉 Kamu mendapatkan ${jumlah} poin!`);
+}
+
+function updatePoin() {
+  document.getElementById("rewardsPoint").innerText = rewards;
+}
+
+
+
+</script>
+
